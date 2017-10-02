@@ -3,21 +3,23 @@
 #include<string>
 using namespace std;
 
-string nabinarny(int b)
+string binary(int b)
 {
     if(b==0) return "0";
     if(b==1) return "1";
     if(b%2 ==0)
-        return nabinarny(b/2) + "0";
+        return binary(b/2) + "0";
     else
-        return nabinarny(b/2) + "1";
+        return binary(b/2) + "1";
 }
 
 
 int main()
 {
-    int i,int_char;
-    string bajt;
+    int i,j,int_char,length,bit_total_1=0;
+    bool bit_p1;
+    string byte;
+
     //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary? czy to w ogóle potrzebne?
     ifstream infile( "1.txt", ios::binary );
 // tworzę drugi plik
@@ -28,34 +30,30 @@ int main()
   long size = infile.tellg();
   infile.seekg (0);
 
-  // tablica bajtów char=bajt ?
-  //char czy unsigned char?
-
   char* buffer = new char[size];
 
   // czytam z pierwszego pliku
   infile.read (buffer,size);
 
   //Liczę bit parzystości
+  // suma modulo jak dla mnie daje ten sam wynik
 for(i=0;i<size;i++)
 {
     int_char=int(buffer[i]);
-    bajt=nabinarny(int_char);
+    byte=binary(int_char);
+    length=byte.length();
 
-    cout<<bajt<<endl;
+    for(j=0;j<length;j++)
+    {
+        if(byte[j]=='1')
+        {
+            bit_total_1++;
+        }
+    }
 }
-//char na int
-//int na string
+bit_total_1=bit_total_1 % 2;
+cout<<bit_total_1;
 
-
-
-
-/*
-   for(int i=0;i<size;i++)
-  {
-  cout<<tab[i];
-  }
-  */
 
   //obliczam dla pliku pierwszego
 

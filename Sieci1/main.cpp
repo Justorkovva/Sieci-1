@@ -2,50 +2,50 @@
 #include<fstream>
 #include<string>
 using namespace std;
-/* void zapisz(string text) {
- // nie jest dokonczona i nwm czy jest sens jej u�ywa�
-    ofstream plik("bin.bin", ios::binary);
-    plik.write(reinterpret_cast<char*>(&text), sizeof(string));
-} */
 
 int main()
 {
-     //wczytuje plik. co robi ifstream::binary, albo ios::binary.  ?
+    //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary.  ?
+    ifstream infile( "1.png", ios::binary );
 
-    ifstream infile( "doc.txt", ios::binary );
+// tworzę drugi plik
+  ofstream outfile ("new.png", ios::binary);
 
-// Copy a file
-  ofstream outfile ("new.txt", ios::binary);
-
-  // get size of file
+  // obliczam wielkość pliku
   infile.seekg (0,infile.end);
   long size = infile.tellg();
   infile.seekg (0);
 
-  // allocate memory for file content
+  // tablica bajtów char=bajt ?
   char* buffer = new char[size];
 
-  // read content of infile
+  // czytam z pierwszego pliku
   infile.read (buffer,size);
 
-  // write to outfile
+  //obliczam dla pliku pierwszego
+
+  //dodaje zakłócenia do buffora
+
+  //obliczam dla pliku drugiego
+
+  //porównuję
+
+  // Zapisuję drugi plik (będzie można zaobserwować czy to taki sam/prawie taki sam)
   outfile.write (buffer,size);
 
-  // release dynamically-allocated memory
   delete[] buffer;
-
   outfile.close();
   infile.close();
   return 0;
    // moge to zrobic na stringach i pojdzie dosc latwo, albo bawic sie w tablice bitow gdzie jest trudniej :/
 
 
-    //zamienic na binarny   buffor bajt�w?  tablica bajt�w
+    //zamienic na binarny   buffor bajtów?  tablica bajtów
 
     //jakos go przechowac najlepiej nie w stringu, aczkolwiek nie wiem czemu.
     //moze klasa biginteger w javie? to tez string :/
 
-    //jak juz jest wczytany to 3 algorytmy na niego napisac i wyliczyc warto�ci
+    //jak juz jest wczytany to 3 algorytmy na niego napisac i wyliczyc wartoœci
 
     //dodac bledy ktorych wartosc mozna zmienic np. 0,1% , 0,01 % . sufit z tej wartosci
 
@@ -53,7 +53,7 @@ int main()
 
     //porownac i zapisac recznie w excelu
 
-    //size of , wska�niki , diff :(
+    //size of , wskaŸniki , diff :(
 
     // zeby sprawdzic jaki bit to dodac np. 1010 and 0001 jak jest rozne od 0 to na ostanim bylo 1
 

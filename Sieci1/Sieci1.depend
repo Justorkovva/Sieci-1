@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1506958189 source:c:\justor\szkó³ka\sieci teleinformatyczne\sieci1\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+

@@ -3,12 +3,22 @@
 #include<string>
 using namespace std;
 
+string nabinarny( int b)
+{
+    if(b==0) return "0";
+    if(b==1) return "1";
+    if(b%2 ==0)
+        return nabinarny(b/2) + "0";
+    else
+        return nabinarny(b/2) + "1";
+}
+
 
 int main()
 {
-    //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary.  ?
+    int i,int_char;
+    //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary? czy to w ogóle potrzebne?
     ifstream infile( "1.txt", ios::binary );
-
 // tworzę drugi plik
   ofstream outfile ("new.txt", ios::binary);
 
@@ -18,17 +28,31 @@ int main()
   infile.seekg (0);
 
   // tablica bajtów char=bajt ?
-
+  //char czy unsigned char?
 
   char* buffer = new char[size];
-/*
-  for(int i=0;i<size;i++)
-  {
-  cout<<buffer[i]<<endl;
-  }
-*/
+
   // czytam z pierwszego pliku
   infile.read (buffer,size);
+
+  //Liczę bit parzystości
+for(i=0;i<size;i++)
+{
+    int_char=int(buffer[i]);
+    cout<<int_char<<endl;
+}
+//char na int
+//int na string
+
+
+
+
+/*
+   for(int i=0;i<size;i++)
+  {
+  cout<<tab[i];
+  }
+  */
 
   //obliczam dla pliku pierwszego
 

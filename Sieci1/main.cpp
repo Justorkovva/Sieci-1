@@ -3,7 +3,7 @@
 #include<string>
 using namespace std;
 
-string nabinarny( int b)
+string nabinarny(int b)
 {
     if(b==0) return "0";
     if(b==1) return "1";
@@ -17,6 +17,7 @@ string nabinarny( int b)
 int main()
 {
     int i,int_char;
+    string bajt;
     //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary? czy to w ogóle potrzebne?
     ifstream infile( "1.txt", ios::binary );
 // tworzę drugi plik
@@ -39,7 +40,9 @@ int main()
 for(i=0;i<size;i++)
 {
     int_char=int(buffer[i]);
-    cout<<int_char<<endl;
+    bajt=nabinarny(int_char);
+
+    cout<<bajt<<endl;
 }
 //char na int
 //int na string

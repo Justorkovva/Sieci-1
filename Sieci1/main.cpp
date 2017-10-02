@@ -3,13 +3,14 @@
 #include<string>
 using namespace std;
 
+
 int main()
 {
     //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary.  ?
-    ifstream infile( "1.png", ios::binary );
+    ifstream infile( "1.txt", ios::binary );
 
 // tworzę drugi plik
-  ofstream outfile ("new.png", ios::binary);
+  ofstream outfile ("new.txt", ios::binary);
 
   // obliczam wielkość pliku
   infile.seekg (0,infile.end);
@@ -17,14 +18,25 @@ int main()
   infile.seekg (0);
 
   // tablica bajtów char=bajt ?
-  char* buffer = new char[size];
 
+
+  char* buffer = new char[size];
+/*
+  for(int i=0;i<size;i++)
+  {
+  cout<<buffer[i]<<endl;
+  }
+*/
   // czytam z pierwszego pliku
   infile.read (buffer,size);
 
   //obliczam dla pliku pierwszego
 
+  //dodaje sume kontrolna na koniec pliku
+
   //dodaje zakłócenia do buffora
+
+  //usuwam sumę kontrolną?
 
   //obliczam dla pliku drugiego
 
@@ -33,12 +45,14 @@ int main()
   // Zapisuję drugi plik (będzie można zaobserwować czy to taki sam/prawie taki sam)
   outfile.write (buffer,size);
 
+  //żeby nie tworzyć lagów na komputerze
   delete[] buffer;
   outfile.close();
   infile.close();
   return 0;
-   // moge to zrobic na stringach i pojdzie dosc latwo, albo bawic sie w tablice bitow gdzie jest trudniej :/
 
+
+   // moge to zrobic na stringach i pojdzie dosc latwo, albo bawic sie w tablice bitow gdzie jest trudniej :/
 
     //zamienic na binarny   buffor bajtów?  tablica bajtów
 

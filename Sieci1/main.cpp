@@ -16,7 +16,7 @@ string binary(int b)
 
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1;
     bool bit_p1;
     string byte;
 
@@ -30,21 +30,48 @@ int main()
   long size = infile.tellg();
   infile.seekg (0);
 
-  char* buffer = new char[size];
+  char* buffer = new char[size+1];
 
   // czytam z pierwszego pliku
   infile.read (buffer,size);
 
-  //Liczę bit parzystości
-  // suma modulo jak dla mnie daje ten sam wynik
+  cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy "<<endl;
+
+  //dodac case
+
+  //Licze bit parzystości
 for(i=0;i<size;i++)
 {
+    for(j=0;j<8;j++)
+    {
+    if((buffer[i] >> j) & 1)
+        bit_total_1++;
+    }
+}
+bit_mod2_1=bit_total_1 % 2;
+cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod2_1<<endl;
+
+//Dodaje sume kontrolna
+buffer[size+1]=bit_total_1;
+
+
+
+
+//dodaje zaklocenia
+
+
+/*
+    cout<<buffer[i]<<endl;
+    buffer[i] ^= 1 << 0;
+    cout<<buffer[i]<<endl;
+
     int_char=int(buffer[i]);
     byte=binary(int_char);
     length=byte.length();
 
     for(j=0;j<length;j++)
     {
+        cout<<byte[j];
         if(byte[j]=='1')
         {
             bit_total_1++;
@@ -52,7 +79,9 @@ for(i=0;i<size;i++)
     }
 }
 bit_total_1=bit_total_1 % 2;
-cout<<bit_total_1;
+
+*/
+//cout<<endl<<bit_total_1;
 
 
   //obliczam dla pliku pierwszego

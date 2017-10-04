@@ -3,7 +3,7 @@
 #include<string>
 using namespace std;
 
-string binary(int b)
+/*string binary(int b)
 {
     if(b==0) return "0";
     if(b==1) return "1";
@@ -12,11 +12,10 @@ string binary(int b)
     else
         return binary(b/2) + "1";
 }
-
-
+*/
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=0;
     bool bit_p1;
     string byte;
 
@@ -36,10 +35,12 @@ int main()
   infile.read (buffer,size);
 
   cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy "<<endl;
+cin>>algorytm;
 
-  //dodac case
+  switch(algorytm) {
 
-  //Licze bit parzystości
+  case 1:
+//Licze bit parzystości
 for(i=0;i<size;i++)
 {
     for(j=0;j<8;j++)
@@ -51,8 +52,29 @@ for(i=0;i<size;i++)
 bit_mod2_1=bit_total_1 % 2;
 cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod2_1<<endl;
 
-//Dodaje sume kontrolna
-buffer[size+1]=bit_total_1;
+//Dodaje sume kontrolna, przechowuje ja w int
+
+buffer[size+1]=char(bit_mod2_1);
+
+/* buffer[size+1] |=bit_mod2_1<<0; //nie jestem pewna tego zapisu
+buffer[size+1] ^= (-bit_mod2_1 ^ buffer[size+1]) & (1 << 0);
+cout<<((buffer[i] >> 0) & 1)<<endl;
+*/
+    break;
+
+  case 2:
+
+    break;
+
+  case 3:
+    break;
+
+  default:
+      cout<<"Wybrales zla wartosc"<<endl;
+    break;
+  }
+
+
 
 
 

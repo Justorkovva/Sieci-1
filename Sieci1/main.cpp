@@ -15,7 +15,7 @@ using namespace std;
 */
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=0;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=0,m,bit_mod;
     bool bit_p1;
     string byte;
 
@@ -63,6 +63,21 @@ cout<<((buffer[i] >> 0) & 1)<<endl;
     break;
 
   case 2:
+      //Licze sume modulo
+      for(i=0;i<size;i++) {
+    for(j=0;j<8;j++) {
+    if((buffer[i] >> j) & 1)
+        bit_total_1++;
+    }}
+    cout<<"Podaj modulo "<<endl;
+    cin>>m;
+bit_mod=bit_total_1 % m;
+cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod<<endl;
+
+//Dodaje sume kontrolna, przechowuje ja w int
+
+buffer[size+1]=char(bit_mod);
+cout<<int(buffer[size+1]); //zwraca 1 lub 0
 
     break;
 

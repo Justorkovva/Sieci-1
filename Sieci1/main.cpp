@@ -27,7 +27,7 @@ cin>>algorytm;
 
   switch(algorytm) {
   case 1:  //Licze bit parzystości
-{
+{bit_total_1=0;
 for(i=0;i<size;i++)
 {    for(j=0;j<8;j++) {
         if((buffer[i] >> j) & 1)
@@ -44,8 +44,7 @@ buffer[size+1]=char(bit_mod2_1); //Dodaje sume kontrolna, przechowuje ja w int z
     break;
 
   case 2:   //Licze sume modulo
-{
-
+{bit_total_1=0;
       for(i=0;i<size;i++) {
     for(j=0;j<8;j++) {
     if((buffer[i] >> j) & 1)
@@ -54,7 +53,7 @@ buffer[size+1]=char(bit_mod2_1); //Dodaje sume kontrolna, przechowuje ja w int z
     cout<<"Podaj modulo "<<endl;
     cin>>m;
 bit_mod=bit_total_1 % m;
-cout<<"Suma modulo dla oryginalu wynosi : "<<bit_mod<<endl;
+cout<<"Suma modulo dla oryginalu wynosi : "<<bit_mod<<endl<<endl;
 buffer[size+1]=char(bit_mod); //suma kontrolna
 
 //Dodaj zakłocenia - sufit żeby zawsze jakieś było.
@@ -63,6 +62,7 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
     break;
 
   case 3: //CRC
+{
      {/*
       cout<<"Ilo bitowy kod CRC chcesz otrzymac?"<<endl;
       cin>>n;
@@ -70,7 +70,7 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
       cin>>crc;
       */}
      a=0;
-     crc="10110"; n=4; //jak zmieniac to razem!
+     crc="1011011"; n=6; //jak zmieniac to razem!
      ten=10;
      liczba=floor(size/ten);  // ile bedzie przejsc petli i resztka
      reszta= size % ten;
@@ -80,10 +80,7 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
      {  for(i=0;i<ten;i++) {
             for(j=0;j<8;j++)
                 { (((buffer[i] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');
-     }}}
-     cout<<"na poczatku mam"<<endl;
-      for(i=0;i<80;i++){cout<<crc2[i];}
-    cout<<endl;
+     }}}  // for(i=0;i<80;i++){cout<<crc2[i];}
 
 while(a<liczba) // dziele po 10 bajtow za kazdym razem
 { a++;
@@ -94,47 +91,42 @@ while(a<liczba) // dziele po 10 bajtow za kazdym razem
                 { crc2[j+m]= '0' ;}
                 else
                 { crc2[j+m] = '1';}
-}
-for(i=0;i<80;i++){cout<<crc2[i];}
-                    cout<<endl;
-}
-}
-}
+}  // for(i=0;i<80;i++){cout<<crc2[i];}cout<<endl;
+}}
     for(i=0;i<n;i++) // koncowke przerzucam na poczatek do dalszego dzielenia
      {crc2[i]=crc2[80-n+i];}
+//for(i=0;i<80;i++){cout<<crc2[i];}cout<<endl;
+
     if(a<liczba) // dodaje znowu do 10 bajtow
      { for(i=0;i<ten;i++) {
             for(j=0;j<8;j++)
                 { if(((i*ten)+j )>=n)
                     {(((buffer[i+(ten*a)] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');}
-}}
-cout<<endl<<"NA NowO"<<endl;
-}
-
+}}}  //for(i=0;i<80;i++){cout<<crc2[i];}cout<<endl;
+} //koniec petli
 
 for(i=0;i<n;i++) {crc2[80-n+i]='0';} //zera na koncu
 
-     for(i=0;i<reszta;i++) {
-            for(j=0;j<8;j++)
-                { if(((i*ten)+j )>=n)
+for(i=0;i<reszta;i++) { // dodaje resztke bitow do policzenia
+        for(j=0;j<8;j++)
+            { if(((i*ten)+j )>=n)
                     {(((buffer[i+(ten*a)] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');}}}
 
     for(j=0;j<((8*ten)-n);j++) // dzielenie znowu
     { if(crc2[j]=='1')
         {for(m=0;m<=n;m++) // XOR
-            { if(crc[m]=='1')
+            { if(((crc2[j+m]=='1') && (crc[m]=='1')) || ((crc2[j+m]=='0') && (crc[m]=='0')))
                 { crc2[j+m]= '0' ;}
                 else
-                { crc2[j+m] = '1';}   }}
+                { crc2[j+m] = '1';}
+            } // for(i=0;i<80;i++){cout<<crc2[i];}cout<<endl;
+    }}
+    cout<<"Kod CRC dla oryginalu wynosi  ";
+     for(i=n;i>0;i--){cout<<crc2[(ten*8-i)];}
+     cout<<endl<<endl;
 
-     for(i=0;i<80;i++){cout<<crc2[i];}
-     cout<<endl;}
-
-
-
-
-     for(i=0;i<80;i++){cout<<crc2[i];}
-     cout<<endl;
+     //dodaj zaklocenia i policz jeszcze raz
+}
     break;
 
   case 0: cout<<"Do widzenia"<<endl;
@@ -152,33 +144,7 @@ for(i=0;i<n;i++) {crc2[80-n+i]='0';} //zera na koncu
   return 0;
 }
 
-
-
-
 //cout<<int(buffer[size+1]); //zwraca 1 lub 0
-
-/*
-    cout<<buffer[i]<<endl;
-    buffer[i] ^= 1 << 0;
-    cout<<buffer[i]<<endl;
-
-    int_char=int(buffer[i]);
-    byte=binary(int_char);
-    length=byte.length();
-
-    for(j=0;j<length;j++)
-    {
-        cout<<byte[j];
-        if(byte[j]=='1')
-        {
-            bit_total_1++;
-        }
-    }
-}
-bit_total_1=bit_total_1 % 2;
-
-*/
-//cout<<endl<<bit_total_1;
 
     //porownac i zapisac recznie w excelu
     //size of , wskazniki , diff :(
@@ -190,7 +156,6 @@ bit_total_1=bit_total_1 % 2;
 buffer[size+1] ^= (-bit_mod2_1 ^ buffer[size+1]) & (1 << 0);
 cout<<((buffer[size+1] >> 0) & 1)<<endl;
 */
-
 
 /*string binary(int b)
 {

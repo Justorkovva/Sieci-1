@@ -2,15 +2,19 @@
 #include<fstream>
 #include<string>
 #include <math.h>
+#include <cstdlib>
+#include<ctime>
 using namespace std;
 
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta,ten,a=0;
+    srand(time(NULL));
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta,ten,a=0,err;
     string crc;
+    double er;
     char crc2[80]="0";
-    ifstream infile( "1.txt", ios::binary );
-    ofstream outfile ("new.txt", ios::binary);
+    ifstream infile( "1.jpg", ios::binary );
+    ofstream outfile ("new.jpg", ios::binary);
 
   infile.seekg (0,infile.end);  // obliczam wielkość pliku
   long size = infile.tellg();
@@ -22,7 +26,7 @@ int main()
   while(algorytm>0) {
     buffer[size+1]='0'; //zeruje sume kontrolna
 
-cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 0 - Wyjscie"<<endl;
+cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 4 - Dodaj bledy z powtorzeniami \n  5 - Dodaj bledy bez powtorzen \n 0 - Wyjscie"<<endl;
 cin>>algorytm;
 
   switch(algorytm) {
@@ -129,6 +133,38 @@ for(i=0;i<reszta;i++) { // dodaje resztke bitow do policzenia
 }
     break;
 
+  case 4:
+       cout<<"Ile procent bledow?"<<endl;
+      cin>>er;
+      err=ceil((er*size)/100); //ilosc bledow
+
+    for(i=0;i<err;i++){
+    m=rand() % size ;
+    a= rand() % 8;
+    buffer[m] ^= 1 << a;
+    }
+    break;
+
+  case 5: //bledy bez powtorzen
+{
+      cout<<"Ile procent bledow?"<<endl;
+      cin>>er;
+      err=ceil((er*size)/100); //ilosc bledow
+        i=0;
+       int tab[err][2]; //bez powtorzen
+        while(i<err){
+
+        m=rand() % size ;
+        a= rand() % 8;
+
+        buffer[m] ^= 1 << a;
+        }
+
+ // x=rand()%size;
+      //buffer[size];
+
+    break;
+}
   case 0: cout<<"Do widzenia"<<endl;
     break;
   default: cout<<"Wybrales zla wartosc"<<endl;
@@ -167,3 +203,5 @@ cout<<((buffer[size+1] >> 0) & 1)<<endl;
         return binary(b/2) + "1";
 }
 */
+
+//https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit

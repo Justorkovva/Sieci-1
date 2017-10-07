@@ -6,8 +6,9 @@ using namespace std;
 
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta;
-    string crc, crc2;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta,ten,a=0;
+    string crc;
+    char crc2[80]="0";
     ifstream infile( "1.txt", ios::binary );
     ofstream outfile ("new.txt", ios::binary);
 
@@ -70,47 +71,45 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
       */}
 
       n=3;
-     crc="1010";
+     crc="1011";
+     ten=10;
+     liczba=floor(size/ten);  // ile bedzie przejsc petli i resztka
+     reszta= size % ten;
 
-     // ile bedzie przejsc petli i resztka
-     liczba=floor(size/10);
-     reszta= size % 10;
-
-
-     // Taki ciąg mogę podzielić 80-(n+1) razy
+     // Taki ciąg mogę podzielić 80-n razy
      // Potem n+1 ostatnich bitów na początkowe miejsca w ciągu, a resztę uzupełnić z pozostałych
      //size podłoga 10 = ile razy przejdzie petla. Modulo - ile "resztek" sie doda + wyzerowac nieuzywane
 
-    // pierwszy raz.
+    // pierwszy raz uzupelniam ciag
      if(liczba>0)
-     {
-     for(i=0;i<10;i++) {
-     for(j=0;j<8;j++)
-         { if((buffer[i] >> j) & 1)
-             crc2[j]='1';
-             else
-            crc2[j]='0';
-             cout<<crc2[j];
-         }}
-     }
+     {  for(i=0;i<ten;i++) {
+            for(j=0;j<8;j++)
+                { (((buffer[i] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');
+     }}}
+     for(i=0;i<80;i++) {cout<<crc2[i];}
 
-/*
-     for(i=0;i<(size);i+=10)
-     { /*
-            //dzielenie przez crc
-          for(j=0;j<8;j++)
-         { //wsadzam bity do stringa
-             if((buffer[i] >> j) & 1)
-             crc2[j]='1';
-             else
-            crc2[j]='0';
-             cout<<crc2[j]<<endl;
-             crc[j+1]=
-         }
-         for()
-        // buffer[i]; na bity
-         //dzielenie xor
-         */
+cout<<"Teraz dzielenie"<<endl;
+
+while(a<liczba)
+{ a++;
+    for(j=0;j<((8*ten)-n);j++) // dziele przez crc po kazdym bicie
+    { if(crc2[j]=='1')
+        {for(m=0;m<=n;m++) // XOR
+            { if(crc[m]=='1')
+                { crc2[j+m]= '0' ;}
+                else
+                { crc2[j+m] = '1';}
+}}}}
+
+         //zostaje n bitów
+         // n bity idą na początkowe wartosci
+         //liczę ile bajtów trzeba odpuścić teraz i z którego dalej zacząć dodawać
+
+     //cout<<endl<<crc2;
+    // cout<<endl<<"eee";
+     for(i=0;i<80;i++){
+        cout<<crc2[i];
+     }
     break;
 
   case 5:

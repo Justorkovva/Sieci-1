@@ -1,75 +1,50 @@
 #include <iostream>
 #include<fstream>
 #include<string>
+#include <math.h>
 using namespace std;
 
-/*string binary(int b)
-{
-    if(b==0) return "0";
-    if(b==1) return "1";
-    if(b%2 ==0)
-        return binary(b/2) + "0";
-    else
-        return binary(b/2) + "1";
-}
-*/
 int main()
 {
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n;
-    bool bit_p1;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta;
     string crc, crc2;
-
-
-    //wczytuje plik. Czy jest różnica między ifstream::binary, a ios::binary? czy to w ogóle potrzebne?
     ifstream infile( "1.txt", ios::binary );
-// tworzę drugi plik
-  ofstream outfile ("new.txt", ios::binary);
+    ofstream outfile ("new.txt", ios::binary);
 
-  // obliczam wielkość pliku
-  infile.seekg (0,infile.end);
+  infile.seekg (0,infile.end);  // obliczam wielkość pliku
   long size = infile.tellg();
   infile.seekg (0);
 
-   // czytam z pierwszego pliku
   char* buffer = new char[size+1];
-   infile.read (buffer,size);
+    infile.read (buffer,size);
 
   while(algorytm>0) {
+    buffer[size+1]='0'; //zeruje sume kontrolna
 
-  buffer[size+1]=0; //zeruje sume kontrolna
-
-  cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 0 - Wyjscie"<<endl;
+cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 0 - Wyjscie"<<endl;
 cin>>algorytm;
 
   switch(algorytm) {
-
-  case 1:
-//Licze bit parzystości
+  case 1:  //Licze bit parzystości
+{
 for(i=0;i<size;i++)
 {    for(j=0;j<8;j++) {
         if((buffer[i] >> j) & 1)
             bit_total_1++;
-    }
-}
+    }}
 bit_mod2_1=bit_total_1 % 2;
-cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod2_1<<endl;
+cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod2_1<<endl<<endl;
 
-//Dodaje sume kontrolna, przechowuje ja w int
-
-buffer[size+1]=char(bit_mod2_1);
-
-/* buffer[size+1] |=bit_mod2_1<<0; //nie jestem pewna tego zapisu, i tak zajmie 1 bajt w charze, to tak będzie łatwiej
-buffer[size+1] ^= (-bit_mod2_1 ^ buffer[size+1]) & (1 << 0);
-cout<<((buffer[size+1] >> 0) & 1)<<endl;
-*/
+buffer[size+1]=char(bit_mod2_1); //Dodaje sume kontrolna, przechowuje ja w int zmienionym na char
 
 //Dodaj zakłocenia - sufit żeby zawsze jakieś było.
-
-//Policz jeszcze raz
+//Policz jeszcze raz dla nowego pliku
+  }
     break;
 
-  case 2:
-      //Licze sume modulo
+  case 2:   //Licze sume modulo
+{
+
       for(i=0;i<size;i++) {
     for(j=0;j<8;j++) {
     if((buffer[i] >> j) & 1)
@@ -78,18 +53,15 @@ cout<<((buffer[size+1] >> 0) & 1)<<endl;
     cout<<"Podaj modulo "<<endl;
     cin>>m;
 bit_mod=bit_total_1 % m;
-cout<<"Suma modulo dla oryginału wynosi : "<<bit_mod<<endl;
-
-//Dodaje sume kontrolna,
-buffer[size+1]=char(bit_mod);
-//cout<<int(buffer[size+1]); //zwraca 1 lub 0
+cout<<"Suma modulo dla oryginalu wynosi : "<<bit_mod<<endl;
+buffer[size+1]=char(bit_mod); //suma kontrolna
 
 //Dodaj zakłocenia - sufit żeby zawsze jakieś było.
-
 //Policz jeszcze raz
+}
     break;
 
-  case 3:
+  case 3: //CRC
      {/*
       cout<<"Ilo bitowy kod CRC chcesz otrzymac?"<<endl;
       cin>>n;
@@ -100,42 +72,69 @@ buffer[size+1]=char(bit_mod);
       n=3;
      crc="1010";
 
-     for(i=0;i<(size);i++)
-     {  for(j=0;j<8;j++)
+     // ile bedzie przejsc petli i resztka
+     liczba=floor(size/10);
+     reszta= size % 10;
+
+
+     // Taki ciąg mogę podzielić 80-(n+1) razy
+     // Potem n+1 ostatnich bitów na początkowe miejsca w ciągu, a resztę uzupełnić z pozostałych
+     //size podłoga 10 = ile razy przejdzie petla. Modulo - ile "resztek" sie doda + wyzerowac nieuzywane
+
+    // pierwszy raz.
+     if(liczba>0)
+     {
+     for(i=0;i<10;i++) {
+     for(j=0;j<8;j++)
+         { if((buffer[i] >> j) & 1)
+             crc2[j]='1';
+             else
+            crc2[j]='0';
+             cout<<crc2[j];
+         }}
+     }
+
+/*
+     for(i=0;i<(size);i+=10)
+     { /*
+            //dzielenie przez crc
+          for(j=0;j<8;j++)
          { //wsadzam bity do stringa
              if((buffer[i] >> j) & 1)
              crc2[j]='1';
              else
             crc2[j]='0';
              cout<<crc2[j]<<endl;
+             crc[j+1]=
          }
+         for()
         // buffer[i]; na bity
          //dzielenie xor
-     }
-
-
-
-
-    break;
-  case 0:
-    cout<<"Do widzenia"<<endl;
+         */
     break;
 
-  default:
-      cout<<"Wybrales zla wartosc"<<endl;
+  case 5:
+    //test
+    buffer[5]='d';
+  case 0: cout<<"Do widzenia"<<endl;
     break;
-  }
-  }
-    // Zapisuję drugi plik (będzie można zaobserwować czy to taki sam/prawie taki sam)
+  default: cout<<"Wybrales zla wartosc"<<endl;
+    break;
+  }}
+  // Zapisuję drugi plik (będzie można zaobserwować czy to taki sam/prawie taki sam)
   outfile.write (buffer,size);
 
-//żeby nie tworzyć lagów na komputerze
-  delete[] buffer;
+
+  delete[] buffer; //żeby nie tworzyć lagów na komputerze
   outfile.close();
   infile.close();
   return 0;
 }
 
+
+
+
+//cout<<int(buffer[size+1]); //zwraca 1 lub 0
 
 /*
     cout<<buffer[i]<<endl;
@@ -165,4 +164,20 @@ bit_total_1=bit_total_1 % 2;
     // zeby sprawdzic jaki bit to dodac np. 1010 and 0001 jak jest rozne od 0 to na ostanim bylo 1
     //w krypto 4 zad 2 nwm czy dziala mam zamiane bitow na stringi
 
+ //   buffer w bicie
+/* buffer[size+1] |=bit_mod2_1<<0; //nie jestem pewna tego zapisu, i tak zajmie 1 bajt w charze, to tak będzie łatwiej
+buffer[size+1] ^= (-bit_mod2_1 ^ buffer[size+1]) & (1 << 0);
+cout<<((buffer[size+1] >> 0) & 1)<<endl;
+*/
 
+
+/*string binary(int b)
+{
+    if(b==0) return "0";
+    if(b==1) return "1";
+    if(b%2 ==0)
+        return binary(b/2) + "0";
+    else
+        return binary(b/2) + "1";
+}
+*/

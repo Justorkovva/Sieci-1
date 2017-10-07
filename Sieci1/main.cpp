@@ -69,16 +69,11 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
       cout<<"Podaj CRC (o jeden wiecej bit niz podales przed chwila)"<<endl;
       cin>>crc;
       */}
-
-      n=3;
-     crc="1011";
+     a=0;
+     crc="10110"; n=4; //jak zmieniac to razem!
      ten=10;
      liczba=floor(size/ten);  // ile bedzie przejsc petli i resztka
      reszta= size % ten;
-
-     // Taki ciąg mogę podzielić 80-n razy
-     // Potem n+1 ostatnich bitów na początkowe miejsca w ciągu, a resztę uzupełnić z pozostałych
-     //size podłoga 10 = ile razy przejdzie petla. Modulo - ile "resztek" sie doda + wyzerowac nieuzywane
 
     // pierwszy raz uzupelniam ciag
      if(liczba>0)
@@ -86,35 +81,62 @@ buffer[size+1]=char(bit_mod); //suma kontrolna
             for(j=0;j<8;j++)
                 { (((buffer[i] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');
      }}}
-     for(i=0;i<80;i++) {cout<<crc2[i];}
+     cout<<"na poczatku mam"<<endl;
+      for(i=0;i<80;i++){cout<<crc2[i];}
+    cout<<endl;
 
-cout<<"Teraz dzielenie"<<endl;
-
-while(a<liczba)
+while(a<liczba) // dziele po 10 bajtow za kazdym razem
 { a++;
     for(j=0;j<((8*ten)-n);j++) // dziele przez crc po kazdym bicie
+    { if(crc2[j]=='1')
+        {for(m=0;m<=n;m++) // XOR
+            { if(((crc2[j+m]=='1') && (crc[m]=='1')) || ((crc2[j+m]=='0') && (crc[m]=='0')))
+                { crc2[j+m]= '0' ;}
+                else
+                { crc2[j+m] = '1';}
+}
+for(i=0;i<80;i++){cout<<crc2[i];}
+                    cout<<endl;
+}
+}
+}
+    for(i=0;i<n;i++) // koncowke przerzucam na poczatek do dalszego dzielenia
+     {crc2[i]=crc2[80-n+i];}
+    if(a<liczba) // dodaje znowu do 10 bajtow
+     { for(i=0;i<ten;i++) {
+            for(j=0;j<8;j++)
+                { if(((i*ten)+j )>=n)
+                    {(((buffer[i+(ten*a)] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');}
+}}
+cout<<endl<<"NA NowO"<<endl;
+}
+
+
+for(i=0;i<n;i++) {crc2[80-n+i]='0';} //zera na koncu
+
+     for(i=0;i<reszta;i++) {
+            for(j=0;j<8;j++)
+                { if(((i*ten)+j )>=n)
+                    {(((buffer[i+(ten*a)] >> j) & 1) ? crc2[(i*8)+j]='1' : crc2[(i*8)+j]='0');}}}
+
+    for(j=0;j<((8*ten)-n);j++) // dzielenie znowu
     { if(crc2[j]=='1')
         {for(m=0;m<=n;m++) // XOR
             { if(crc[m]=='1')
                 { crc2[j+m]= '0' ;}
                 else
-                { crc2[j+m] = '1';}
-}}}}
+                { crc2[j+m] = '1';}   }}
 
-         //zostaje n bitów
-         // n bity idą na początkowe wartosci
-         //liczę ile bajtów trzeba odpuścić teraz i z którego dalej zacząć dodawać
+     for(i=0;i<80;i++){cout<<crc2[i];}
+     cout<<endl;}
 
-     //cout<<endl<<crc2;
-    // cout<<endl<<"eee";
-     for(i=0;i<80;i++){
-        cout<<crc2[i];
-     }
+
+
+
+     for(i=0;i<80;i++){cout<<crc2[i];}
+     cout<<endl;
     break;
 
-  case 5:
-    //test
-    buffer[5]='d';
   case 0: cout<<"Do widzenia"<<endl;
     break;
   default: cout<<"Wybrales zla wartosc"<<endl;

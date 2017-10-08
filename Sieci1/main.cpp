@@ -9,8 +9,9 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta,ten,a=0,err;
+    int i,j,int_char,length,bit_total_1=0, bit_mod2_1,algorytm=1,m,bit_mod,n,liczba,reszta,ten,a=0,err,error,two=0,x,y;
     string crc;
+    bool doubl=false;
     double er;
     char crc2[80]="0";
     ifstream infile( "1.jpg", ios::binary );
@@ -23,48 +24,50 @@ int main()
   char* buffer = new char[size+1];
     infile.read (buffer,size);
 
-  while(algorytm>0) {
-    buffer[size+1]='0'; //zeruje sume kontrolna
+buffer[size+1]='0'; //zeruje sume kontrolna
 
-cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 4 - Dodaj bledy z powtorzeniami \n  5 - Dodaj bledy bez powtorzen \n 0 - Wyjscie"<<endl;
+cout<<" Ktory algorytm chcesz wybrac? \n 1 - bit parzystosci \n 2 - suma modulo \n 3 - Cykliczny kod nadmiarowy  \n 0 - Wyjscie"<<endl;
 cin>>algorytm;
+if(algorytm==0) return 0;
+cout<<" Jak beda dodawane bledy? \n 1 - z powtorzeniami \n 2 - bez powtorzen"<<endl;
+cin>>error;
 
-  switch(algorytm) {
+while(two<2)
+{
+    switch(algorytm) { // algorytm bedzie liczony dwa razy
   case 1:  //Licze bit parzystości
-{bit_total_1=0;
+{
+    bit_total_1=0;
 for(i=0;i<size;i++)
 {    for(j=0;j<8;j++) {
         if((buffer[i] >> j) & 1)
             bit_total_1++;
     }}
 bit_mod2_1=bit_total_1 % 2;
-cout<<"Bit parzystosci dla oryginalu wynosi : "<<bit_mod2_1<<endl<<endl;
-
+cout<<"Bit parzystosci wyliczony wynosi : "<<bit_mod2_1<<endl<<endl;
+if(two<1) // sume kontrolna dodaje tylko z apierwszym razem
 buffer[size+1]=char(bit_mod2_1); //Dodaje sume kontrolna, przechowuje ja w int zmienionym na char
-
-//Dodaj zakłocenia - sufit żeby zawsze jakieś było.
-//Policz jeszcze raz dla nowego pliku
-  }
     break;
-
+}
   case 2:   //Licze sume modulo
-{bit_total_1=0;
+{
+    if(two<1)
+    {cout<<"Podaj modulo "<<endl;
+    cin>>m;}
+
+    bit_total_1=0;
       for(i=0;i<size;i++) {
     for(j=0;j<8;j++) {
     if((buffer[i] >> j) & 1)
         bit_total_1++;
     }}
-    cout<<"Podaj modulo "<<endl;
-    cin>>m;
+
 bit_mod=bit_total_1 % m;
-cout<<"Suma modulo dla oryginalu wynosi : "<<bit_mod<<endl<<endl;
+cout<<"Suma modulo wynosi : "<<bit_mod<<endl<<endl;
+if(two<1)
 buffer[size+1]=char(bit_mod); //suma kontrolna
-
-//Dodaj zakłocenia - sufit żeby zawsze jakieś było.
-//Policz jeszcze raz
-}
     break;
-
+}
   case 3: //CRC
 {
      {/*
@@ -125,51 +128,57 @@ for(i=0;i<reszta;i++) { // dodaje resztke bitow do policzenia
                 { crc2[j+m] = '1';}
             } // for(i=0;i<80;i++){cout<<crc2[i];}cout<<endl;
     }}
-    cout<<"Kod CRC dla oryginalu wynosi  ";
+    cout<<"Kod CRC dla wynosi  ";
      for(i=n;i>0;i--){cout<<crc2[(ten*8-i)];}
      cout<<endl<<endl;
-
-     //dodaj zaklocenia i policz jeszcze raz
-}
     break;
+}
+  default:
+{
+  cout<<endl<<"Wybrales zla wartosc"<<endl;
+    }
+                    }
 
-  case 4:
-       cout<<"Ile procent bledow?"<<endl;
+//dodanie bledow
+if(error==1)
+{
+     cout<<"Ile procent bledow?"<<endl;
       cin>>er;
-      err=ceil((er*size)/100); //ilosc bledow
+      err=ceil((er*(size+1))/100); //ilosc bledow
 
     for(i=0;i<err;i++){
-    m=rand() % size ;
-    a= rand() % 8;
-    buffer[m] ^= 1 << a;
+    x=rand() % (size+1) ;
+    y= rand() % 8;
+    buffer[x] ^= 1 << y;
     }
-    break;
-
-  case 5: //bledy bez powtorzen
+}
+else if(error==2)
 {
-      cout<<"Ile procent bledow?"<<endl;
+     cout<<"Ile procent bledow?"<<endl;
       cin>>er;
-      err=ceil((er*size)/100); //ilosc bledow
-        i=0;
-       int tab[err][2]; //bez powtorzen
-        while(i<err){
+      err=ceil((er*(size+1))/100); //ilosc bledow
+       int tab[err]; //powtorzenia sprawdze w tablicy
 
-        m=rand() % size ;
-        a= rand() % 8;
-
-        buffer[m] ^= 1 << a;
+       for(i=0;i<err;i++) {
+        doubl=false;
+        while(!doubl){ //ponowne losowanie
+            doubl=true;
+        x=rand() % ((size+1)*8) ;
+            for(j=0;j<i;j++){
+                if(x==tab[j])
+                    doubl=false;
+            }}
+            y = x % 8;
+       x=floor(x/8);
+        buffer[x] ^= 1 << y;
         }
 
- // x=rand()%size;
-      //buffer[size];
-
-    break;
 }
-  case 0: cout<<"Do widzenia"<<endl;
-    break;
-  default: cout<<"Wybrales zla wartosc"<<endl;
-    break;
-  }}
+error=0; //zeby juz sie wiecej nie dodalo
+two++; //zeby petla przesza dokladnie dwa razy
+}
+cout<<"Suma kontrolna zwraca  "<<int(buffer[size+1])<<endl;
+
   // Zapisuję drugi plik (będzie można zaobserwować czy to taki sam/prawie taki sam)
   outfile.write (buffer,size);
 
